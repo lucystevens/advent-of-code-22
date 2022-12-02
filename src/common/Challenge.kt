@@ -16,20 +16,22 @@ abstract class Challenge<I,R> {
     private fun getInput(file: String): I =
         parseInput(Paths.get("src/$day/$file.txt").readLines())
 
-    fun testPart1(expected: R){
-        val testInput = getInput("test")
-        checkAnswer(part1(testInput), expected, "testInput part1")
-
-        val input = getInput("input")
-        println(part1(input))
+    fun testPart1(expected: R, solution: R? = null){
+        test(expected, solution, "part1", ::part1)
     }
 
-    fun testPart2(expected: R){
+    fun testPart2(expected: R, solution: R? = null){
+        test(expected, solution, "part2", ::part2)
+    }
+
+    fun test(expected: R, solution: R?, name: String, fn: (I) -> R){
         val testInput = getInput("test")
-        checkAnswer(part2(testInput), expected, "testInput part2")
+        checkAnswer(fn(testInput), expected, "testInput $name")
 
         val input = getInput("input")
-        println(part2(input))
+        val result = fn(input)
+        if(solution == null) println(result)
+        else checkAnswer(result, solution, "realInput $name")
     }
 
     private fun checkAnswer(actual: R, expected: R, name: String = "Testing") {

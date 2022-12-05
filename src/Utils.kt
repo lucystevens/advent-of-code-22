@@ -36,16 +36,10 @@ fun <T> List<T>.groupByLines(linesPerGroup: Int): List<List<T>> =
     foldIndexed(mutableListOf<MutableList<T>>()){ idx, res, line ->
         val group = idx / linesPerGroup
         res.apply {
-            getOrAdd(group, mutableListOf())
+            getOrAdd(group) { mutableListOf() }
                 .add(line)
         }
     }
-
-// adds defaultVal elements until list large enough for index
-fun <T> MutableList<T>.getOrAdd(index: Int, defaultVal: T): T {
-    while(size<=index) add(defaultVal)
-    return get(index)
-}
 
 // adds computed defaultVal elements until list large enough for index
 fun <T> MutableList<T>.getOrAdd(index: Int, defaultValFn: (Int)->T): T {
@@ -66,3 +60,7 @@ fun intersect(string1: String, string2: String): Set<Char> =
 fun <T> List<T>.print(): List<T> = map {
     it.also { println(it) }
 }
+
+// do a thing x times
+fun repeat(times: Int, thing: (Int) -> Unit) =
+    (1..times).forEach(thing)

@@ -17,14 +17,20 @@ abstract class Challenge<I,R> {
         parseInput(Paths.get("src/$day/$file.txt").readLines())
 
     fun testPart1(expected: R, solution: R? = null){
-        test(expected, solution, "part1", ::part1)
+        testFromFile(expected, solution, "part1", ::part1)
     }
 
     fun testPart2(expected: R, solution: R? = null){
-        test(expected, solution, "part2", ::part2)
+        testFromFile(expected, solution, "part2", ::part2)
     }
 
-    fun test(expected: R, solution: R?, name: String, fn: (I) -> R){
+    fun runTests(tests: List<Pair<I, R>>, fn: (I) -> R){
+        tests.forEachIndexed { idx, it ->
+            checkAnswer(fn(it.first), it.second, "extraTest$idx")
+        }
+    }
+
+    private fun testFromFile(expected: R, solution: R?, name: String, fn: (I) -> R){
         val testInput = getInput("test")
         checkAnswer(fn(testInput), expected, "testInput $name")
 

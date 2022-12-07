@@ -1,6 +1,7 @@
 package day04
 
 import common.Challenge
+import common.tests
 import mapBoth
 import toPair
 
@@ -32,6 +33,11 @@ class Day04 : Challenge<List<Pair<Range,Range>>, Long>() {
                 }
     }
 
+    override val tests = tests<Long> {
+        file("test", part1 = 2, part2 = 4)
+        file("input", part1 = 518, part2 = 909)
+    }
+
 }
 
 fun Range.toLongRange() = first..second
@@ -44,7 +50,5 @@ fun Range.contains(other: Range) =
     first <= other.first && second >= other.second
 
 fun main() {
-    val day04 = Day04()
-    day04.testPart1(2L, solution = 518)
-    day04.testPart2(4L)
+    Day04().test()
 }

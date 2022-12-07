@@ -1,7 +1,10 @@
 package day05
 
 import common.Challenge
+import common.tests
 import getOrAdd
+import multiPop
+import toStack
 import java.util.*
 
 class Day05 : Challenge<Pair<List<Stack<String>>, List<BoxMove>>, String>() {
@@ -52,19 +55,12 @@ class Day05 : Challenge<Pair<List<Stack<String>>, List<BoxMove>>, String>() {
         return stacks.map { it.reversed().toStack() } to moves
     }
 
-}
-
-// Converts a list to a stack
-fun <T> List<T>.toStack(): Stack<T> =
-    fold(Stack<T>()){ stack, item ->
-        stack.apply { push(item) }
+    override val tests = tests<String> {
+        file("test", part1 = "CMZ", part2 = "MCD")
+        file("input", part1 = "VQZNJMWTR", part2 = "NLCDCLVMQ")
     }
 
-// pops multiple items from a stack, retaining order
-fun <T> Stack<T>.multiPop(num: Int): List<T> =
-    (1..num).map {
-        pop()
-    }.reversed()
+}
 
 data class BoxMove (
     val quantity: Int,
@@ -72,7 +68,5 @@ data class BoxMove (
     val to: Int)
 
 fun main() {
-    val day05 = Day05()
-    day05.testPart1("CMZ", solution = "VQZNJMWTR")
-    day05.testPart2("MCD", solution = "NLCDCLVMQ")
+    Day05().test()
 }

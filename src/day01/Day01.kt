@@ -1,6 +1,7 @@
 package day01
 
 import common.Challenge
+import common.tests
 
 class Day01 : Challenge<List<List<String>>, Long>() {
     override val day: String = "day01"
@@ -35,10 +36,13 @@ class Day01 : Challenge<List<List<String>>, Long>() {
         return input
     }
 
+    override val tests = tests<Long> {
+        file("test", part1 = 24000L, part2 = 45000L)
+        file("input", part1 = 65912L, part2 = 195625L)
+    }
+
 }
 
 fun main() {
-    val day01 = Day01()
-    day01.testPart1(24000L)
-    day01.testPart2(45000L)
+    Day01().test()
 }

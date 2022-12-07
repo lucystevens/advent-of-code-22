@@ -1,6 +1,7 @@
 package day03
 
 import common.Challenge
+import common.tests
 import groupByLines
 import intersect
 
@@ -23,6 +24,11 @@ class Day03 : Challenge<List<String>, Long>() {
         return lines
     }
 
+    override val tests = tests<Long> {
+        file("test", part1 = 157, part2 = 70)
+        file("input", part1 = 7795, part2 = 2703)
+    }
+
 }
 
 fun Char.toPriority(): Int =
@@ -38,7 +44,5 @@ fun List<String>.findCommonChars(): String =
     }
 
 fun main() {
-    val day03 = Day03()
-    day03.testPart1(157, solution = 7795)
-    day03.testPart2(70, solution = 2703)
+    Day03().test()
 }

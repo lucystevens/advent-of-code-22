@@ -3,26 +3,31 @@ package template
 import InputType
 import ReturnType
 import common.Challenge
+import common.Part
+import common.tests
 
 class Template : Challenge<InputType, ReturnType>() {
     override val day: String = "template"
 
     override fun part1(input: InputType): ReturnType {
-        return input.size.toLong()
+        return 0
     }
 
     override fun part2(input: InputType): ReturnType {
-        return input.size.toLong()
+        return 0
     }
 
     override fun parseInput(lines: List<String>): InputType {
         return lines
     }
 
+    override val tests = tests<ReturnType> {
+        file("test", part1 = 0, part2 = 0)
+        file("input")
+    }
+
 }
 
 fun main() {
-    val template = Template()
-    template.testPart1(1L)
-    // template.testPart2(1L)
+    Template().test(Part.ONE)
 }

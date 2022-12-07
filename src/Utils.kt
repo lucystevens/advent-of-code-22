@@ -1,10 +1,16 @@
 import java.math.BigInteger
 import java.security.MessageDigest
+import java.util.*
+import kotlin.math.min
 
-/**
- * Converts string to md5 hash.
- */
+// Converts string to md5 hash.
 fun String.md5(): String = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteArray())).toString(16)
+
+// Checks 2 objects are equal
+fun <R> checkAnswer(actual: R, expected: R, name: String = "Testing") {
+    check(actual == expected) { "$name: Actual val: $actual" }
+    println("$name: Success ($actual)")
+}
 
 // converts a list of 2 items to a pair
 fun <T> List<T>.toPair(): Pair<T,T> = Pair(get(0), get(1))
@@ -64,3 +70,23 @@ fun <T> List<T>.print(): List<T> = map {
 // do a thing x times
 fun repeat(times: Int, thing: (Int) -> Unit) =
     (1..times).forEach(thing)
+
+// truncate a string to a maximum length
+fun String.truncate(maxLength: Int) =
+    substring(0, min(maxLength, length))
+
+// uppercases the first letter of a String
+fun String.sentenceCase() =
+    first().uppercase() + drop(1)
+
+// Converts a list to a stack
+fun <T> List<T>.toStack(): Stack<T> =
+    fold(Stack<T>()){ stack, item ->
+        stack.apply { push(item) }
+    }
+
+// pops multiple items from a stack, retaining order
+fun <T> Stack<T>.multiPop(num: Int): List<T> =
+    (1..num).map {
+        pop()
+    }.reversed()

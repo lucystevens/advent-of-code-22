@@ -1,9 +1,8 @@
 package common
 
-import java.nio.file.Paths
-import kotlin.io.path.readLines
+import checkAnswer
 
-abstract class Challenge<I,R> {
+abstract class Challenge<I,R> : Testable {
 
     abstract val day: String
 
@@ -13,35 +12,29 @@ abstract class Challenge<I,R> {
 
     abstract fun parseInput(lines: List<String>): I
 
-    private fun getInput(file: String): I =
-        parseInput(Paths.get("src/$day/$file.txt").readLines())
+    abstract val tests: List<Test<R>>
 
-    fun testPart1(expected: R, solution: R? = null){
-        testFromFile(expected, solution, "part1", ::part1)
-    }
-
-    fun testPart2(expected: R, solution: R? = null){
-        testFromFile(expected, solution, "part2", ::part2)
-    }
-
-    fun runTests(tests: List<Pair<I, R>>, fn: (I) -> R){
-        tests.forEachIndexed { idx, it ->
-            checkAnswer(fn(it.first), it.second, "extraTest$idx")
+    override fun test(toRun: Part){
+        println("Running tests for $day")
+        if(toRun.runPart1){
+            tests.forEach {
+                val input = parseInput(it.getInput(day))
+                testInternal(input, it.part1, it.name, "part1", ::part1)
+            }
+        }
+        println()
+        if(toRun.runPart2){
+            tests.forEach {
+                val input = parseInput(it.getInput(day))
+                testInternal(input, it.part2, it.name, "part2", ::part2)
+            }
         }
     }
 
-    private fun testFromFile(expected: R, solution: R?, name: String, fn: (I) -> R){
-        val testInput = getInput("test")
-        checkAnswer(fn(testInput), expected, "testInput $name")
-
-        val input = getInput("input")
+    private fun testInternal(input: I, expected: R?, name: String, part: String, fn: (I) -> R){
         val result = fn(input)
-        if(solution == null) println(result)
-        else checkAnswer(result, solution, "realInput $name")
+        if(expected == null) println("$name $part: $result")
+        else checkAnswer(result, expected, "$name $part")
     }
 
-    private fun checkAnswer(actual: R, expected: R, name: String = "Testing") {
-        check(actual == expected) { "$name: Actual val: $actual" }
-        println("$name: Success")
-    }
 }

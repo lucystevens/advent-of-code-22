@@ -1,6 +1,7 @@
 package day02
 
 import common.Challenge
+import common.tests
 import toPair
 import kotlin.math.abs
 
@@ -26,10 +27,13 @@ class Day02 : Challenge<List<Pair<Int, Int>>, Long>() {
         }
     }
 
+    override val tests = tests<Long> {
+        file("test", part1 = 15L, part2 = 12L)
+        file("input", part1 = 10310L, part2 = 14859L)
+    }
+
 }
 
 fun main() {
-    val day02 = Day02()
-    day02.testPart1(15L, solution = 10310L)
-    day02.testPart2(12L, solution = 14859L)
+    Day02().test()
 }

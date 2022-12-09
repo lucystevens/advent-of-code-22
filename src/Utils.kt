@@ -90,3 +90,9 @@ fun <T> Stack<T>.multiPop(num: Int): List<T> =
     (1..num).map {
         pop()
     }.reversed()
+
+// update a list in-place
+fun <T> MutableList<T>.update(index: Int, doUpdate: (T) -> T): MutableList<T> = apply {
+    val item = get(index)
+    set(index, doUpdate(item))
+}

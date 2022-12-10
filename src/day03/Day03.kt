@@ -10,7 +10,7 @@ class Day03 : Challenge<List<String>, Long>() {
 
     override fun part1(input: List<String>): Long {
         return input.map { it.halve() }
-                .map { intersect(it.first, it.second) }
+                .map { it.first.intersect(it.second) }
                 .sumOf { it.first().toPriority().toLong() }
     }
 
@@ -40,7 +40,7 @@ fun String.halve(): Pair<String, String> =
 
 fun List<String>.findCommonChars(): String =
     fold(first()){ last, string ->
-        intersect(last, string).joinToString()
+        last.intersect(string).joinToString()
     }
 
 fun main() {

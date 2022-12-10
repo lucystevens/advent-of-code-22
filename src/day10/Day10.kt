@@ -4,6 +4,7 @@ import common.Challenge
 import common.Part
 import common.tests
 import groupByLines
+import mapCumulatively
 import print
 import kotlin.math.abs
 
@@ -17,16 +18,9 @@ class Day10 : Challenge<List<String>, Int>() {
             else listOf(0)
         }
 
-    fun <T> List<T>.mapwithLast(defaultVal: T, mapper: (T, T) -> T): List<T> {
-        var last = defaultVal
-        return map { item ->
-            mapper(last, item).also { last = it }
-        }
-    }
-
     override fun part1(input: List<String>): Int {
         return input.parseCommands()
-            .mapwithLast(1){ last, item ->
+            .mapCumulatively(1){ last, item ->
                 last + item
             }
             .let {
@@ -44,7 +38,7 @@ class Day10 : Challenge<List<String>, Int>() {
 
     override fun part2(input: List<String>): Int {
         input.parseCommands()
-            .mapwithLast(1){ last, item ->
+            .mapCumulatively(1){ last, item ->
                 last + item
             }.mapIndexed { idx, x ->
                 val cycle = idx-2

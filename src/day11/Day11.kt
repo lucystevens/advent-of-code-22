@@ -2,11 +2,11 @@ package day11
 
 import common.Challenge
 import common.Part
+import common.expression.Expression
 import common.tests
 import groupUntil
 import stripInt
 import stripLongs
-import toPair
 import kotlin.random.Random
 
 class Day11 : Challenge<List<Monkey>, Long>() {
@@ -80,19 +80,8 @@ data class Monkey (
 
 }
 
-// TODO make this reuseable for future
-val operators = listOf('*', '-', '+', '/')
-fun String.executeExpression(oldVar: Long): Long{
-    val subbed = replace("old", "$oldVar")
-    val nums = subbed.stripLongs().toPair()
-    return when(val operator = find { it in operators }){
-        '*' -> nums.first * nums.second
-        '-' -> nums.first - nums.second
-        '+' -> nums.first + nums.second
-        '/' -> nums.first / nums.second
-        else -> error("Bad operator $operator")
-    }
-}
+fun String.executeExpression(oldVar: Long): Long =
+    Expression(this).evaluate("old" to oldVar)
 
 fun main() {
     Day11().test(Part.BOTH)

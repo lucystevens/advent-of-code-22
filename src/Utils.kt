@@ -2,13 +2,14 @@ import java.math.BigInteger
 import java.security.MessageDigest
 import java.util.*
 import kotlin.math.abs
+import kotlin.math.exp
 
 // Converts string to md5 hash.
 fun String.md5(): String = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteArray())).toString(16)
 
 // Checks 2 objects are equal
 fun <R> checkAnswer(actual: R, expected: R, name: String = "Testing") {
-    check(actual == expected) { "$name: Actual val: $actual" }
+    check(actual == expected) { "$name: Expected: $expected, Actual val: $actual" }
     println("$name: Success ($actual)")
 }
 
@@ -199,3 +200,41 @@ fun <T> Iterable<T>.mapCumulatively(defaultVal: T, mapper: (T, T) -> T): List<T>
         mapper(last, item).also { last = it }
     }
 }
+
+// group lists into a list of list using a predicate check
+fun <T> Iterable<T>.groupUntil(until: (T) -> Boolean): List<List<T>> =
+    fold(mutableListOf<MutableList<T>>(mutableListOf<T>())){ list, item ->
+        if(until(item)) {
+            list.add(mutableListOf())
+        }else{
+            list.last().add(item)
+        }
+        list
+    }
+
+// strip the first integer from a string
+fun String.stripInt() =
+    stripInts().firstOrNull() ?: 0
+
+// strip all integers from a string
+fun String.stripInts(): List<Int> =
+    Regex("-?\\d+").findAll(this)
+        .asSequence().map {
+            it.value.toInt()
+        }.toList()
+
+// strip the first long from a string
+fun String.stripLong(): Long =
+    stripLongs().firstOrNull() ?: 0
+
+// strip all longs from a string
+fun String.stripLongs(): List<Long> =
+    Regex("-?\\d+").findAll(this)
+        .asSequence().map {
+            it.value.toLong()
+        }.toList()
+
+// inline if check
+fun <T> T.computeIf(check: Boolean, compute: (T) -> T) =
+    if(check) compute(this)
+    else this

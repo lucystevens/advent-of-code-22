@@ -16,11 +16,19 @@ tasks {
         main {
             java.srcDirs("src")
         }
+        test {
+            java.srcDirs("test")
+        }
     }
 
     wrapper {
         gradleVersion = "7.3"
     }
+}
+
+dependencies {
+    implementation(kotlin("reflect"))
+    testImplementation(kotlin("test"))
 }
 
 buildscript {

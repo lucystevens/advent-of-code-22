@@ -1,3 +1,5 @@
+import common.Point
+import common.mapping.Grid
 import java.math.BigInteger
 import java.security.MessageDigest
 import java.util.*
@@ -238,3 +240,13 @@ fun String.stripLongs(): List<Long> =
 fun <T> T.computeIf(check: Boolean, compute: (T) -> T) =
     if(check) compute(this)
     else this
+
+// list of lists to grid
+fun <T> List<List<T>>.toGrid(): Grid<T> =
+    Grid(
+        flatMapIndexed { y, row ->
+            row.mapIndexed { x, item ->
+                Point(x, y) to item
+            }
+        }.associate { it }.toMutableMap()
+    )

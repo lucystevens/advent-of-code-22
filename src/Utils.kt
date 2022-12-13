@@ -6,6 +6,8 @@ import java.util.*
 import kotlin.math.abs
 import kotlin.math.exp
 
+typealias UnaryPair<T> = Pair<T,T>
+
 // Converts string to md5 hash.
 fun String.md5(): String = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteArray())).toString(16)
 

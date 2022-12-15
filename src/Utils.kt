@@ -4,17 +4,18 @@ import java.math.BigInteger
 import java.security.MessageDigest
 import java.util.*
 import kotlin.math.abs
-import kotlin.math.exp
 
 typealias UnaryPair<T> = Pair<T,T>
+
+// TODO this utils file is getting out of hand
 
 // Converts string to md5 hash.
 fun String.md5(): String = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteArray())).toString(16)
 
 // Checks 2 objects are equal
-fun <R> checkAnswer(actual: R, expected: R, name: String = "Testing") {
+fun <R> checkAnswer(actual: R, expected: R, name: String = "Testing", time: Long? = null) {
     check(actual == expected) { "$name: Expected: $expected, Actual val: $actual" }
-    println("$name: Success ($actual)")
+    println("$name: Success${if(time == null) "" else " in ${time}ms"} ($actual)")
 }
 
 // converts a list of 2 items to a pair
@@ -205,6 +206,18 @@ fun <T> Iterable<T>.mapCumulatively(defaultVal: T, mapper: (T, T) -> T): List<T>
     }
 }
 
+// maps with the last value
+fun <T, R> List<T>.mapWithLast(mapper: (T, T) -> R): List<R> =
+    drop(1).mapIndexed { idx, item ->
+        mapper(get(idx), item)
+    }
+
+// maps with the next value
+fun <T, R> List<T>.mapWithNext(mapper: (T, T) -> R): List<R> =
+    dropLast(1).mapIndexed { idx, item ->
+        mapper(get(idx+1), item)
+    }
+
 // group lists into a list of list using a predicate check
 fun <T> Iterable<T>.groupUntil(until: (T) -> Boolean): List<List<T>> =
     fold(mutableListOf<MutableList<T>>(mutableListOf<T>())){ list, item ->
@@ -252,3 +265,19 @@ fun <T> List<List<T>>.toGrid(): Grid<T> =
             }
         }.associate { it }.toMutableMap()
     )
+
+
+// order a range so it can be iterated over
+fun IntRange.order(): IntRange =
+    if(start > endInclusive) endInclusive..start
+    else this
+
+// ease of use function for above
+fun range(start: Int, endInclusive: Int): IntRange =
+    (start..endInclusive).order()
+
+// convert a string x,y to point
+fun String.toPoint(): Point =
+    split(",")
+        .map { it.trim().toInt() }
+        .let { Point(it[0], it[1]) }

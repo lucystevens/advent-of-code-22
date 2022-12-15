@@ -31,10 +31,16 @@ abstract class Challenge<I,R> : Testable {
         }
     }
 
+    private fun <R> timed(fn: () -> R): Pair<Long, R> {
+        val start = System.currentTimeMillis()
+        val res = fn()
+        return System.currentTimeMillis() - start to res
+    }
+
     private fun testInternal(input: I, expected: R?, name: String, part: String, fn: (I) -> R){
-        val result = fn(input)
-        if(expected == null) println("$name $part: $result")
-        else checkAnswer(result, expected, "$name $part")
+        val (time, result) =  timed { fn(input) }
+        if(expected == null) println("$name $part: $result (in ${time}ms)")
+        else checkAnswer(result, expected, "$name $part", time)
     }
 
 }

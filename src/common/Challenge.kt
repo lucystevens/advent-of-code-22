@@ -1,6 +1,7 @@
 package common
 
 import checkAnswer
+import timed
 
 abstract class Challenge<I,R> : Testable {
 
@@ -29,12 +30,6 @@ abstract class Challenge<I,R> : Testable {
                 testInternal(input, it.part2, it.name, "part2", ::part2)
             }
         }
-    }
-
-    private fun <R> timed(fn: () -> R): Pair<Long, R> {
-        val start = System.currentTimeMillis()
-        val res = fn()
-        return System.currentTimeMillis() - start to res
     }
 
     private fun testInternal(input: I, expected: R?, name: String, part: String, fn: (I) -> R){

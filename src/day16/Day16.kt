@@ -83,27 +83,35 @@ class Day16 : Challenge<Map<String,Valve>, Long>() {
         return max + pressure
     }
 
-    // being very sneaky because this solves in 12 iterations and I cba to optimise further
-    fun Map<String,ValveNode>.solveWithElephant(iterations: Int): Long {
+    fun Map<String,ValveNode>.solveWithElephant(): Long {
         val start = this["AA"]!!
         val actor = Actor(start, 0)
 
         val myMoves = actor.getMoves(setOf(), this)
 
         // get possible next step with highest pressure release
+        val pairs = mutableSetOf<Long>()
         var max = 0L
         myMoves.flatMap { m ->
             myMoves.map { e -> m to e}
-        }.filterNot { (m,e) -> m.current.key == e.current.key } // don't move to same place unless it's the only move
-            .take(iterations)
-            .forEach { (m,e) ->
-                val res = solveWithElephant(m, e, setOf(), 25, max)
-                max = max(max, res)
-                println(max)
-            }
+        }.filterNot { (m,e) ->
+            m.current.key == e.current.key ||
+                    pairs.containsAndAdd(m.current.key.hashCode().toLong() * e.current.key.hashCode())
+        } // don't move to same place and don't compute the same pair
+        .forEach { (m,e) ->
+            val res = solveWithElephant(m, e, setOf(), 25, max)
+            max = max(max, res)
+        }
 
         return max
     }
+
+    fun <T> MutableSet<T>.containsAndAdd(element: T): Boolean {
+        val contains = contains(element)
+        add(element)
+        return contains
+    }
+
 
     private fun Map<String,Valve>.toNodes(): Map<String, ValveNode> =
         mapValues { (k,v) ->
@@ -143,7 +151,7 @@ class Day16 : Challenge<Map<String,Valve>, Long>() {
         totalPressure = input.values.sumOf { it.flow }
         val nodes = input.toNodes()
         valvesToOpen = input.values.count { it.flow > 0 }
-        return nodes.solveWithElephant(12)
+        return nodes.solveWithElephant()
     }
 
     val tunnelRegex = Regex("[A-Z]{2}")
@@ -160,7 +168,7 @@ class Day16 : Challenge<Map<String,Valve>, Long>() {
         }.associateBy { it.key }
     }
 
-    // real input for part1 takes 44 seconds :(
+    // real input for part2 takes ~20 minutes!
     override val tests = tests<Long> {
         file("test", part1 = 1651, part2 = 1707)
         file("input", part1 = 1595, part2 = 2189)
